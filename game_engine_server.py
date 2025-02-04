@@ -6,22 +6,43 @@ import game_engine_pb2_grpc
 
 class GameEngineService(game_engine_pb2_grpc.GameEngineServicer):
     def __init__(self):
+        self.max_turns = 0
         self.state = {
             "status": "waiting",
             "current_turn": 0,
-            "player_positions": {}
+            "player_positions": {},
+            "players": []
         }
 
     def StartGame(self, request, context):
         self.state["status"] = "running"
         self.state["current_turn"] = 1
+        self.max_turns = request.max_turns
+        self.state["players"] = []
         return game_engine_pb2.GameState(**self.state)
 
     def PlayerAction(self, request, context):
+        if request.player_id not in self.state["players"]:
+            self.state["players"].append(request.player_id)
         self.state["player_positions"][request.player_id] = request.action
+        
+        if self.state["current_turn"] >= self.max_turns:
+            self.state["status"] = "finished"
+        else:
+            self.state["current_turn"] += 1
+        
         return game_engine_pb2.GameState(**self.state)
 
     def GetGameState(self, request, context):
+        return game_engine_pb2.GameState(**self.state)
+    
+    def ResetGame(self, request, context):
+        self.state = {
+            "status": "waiting",
+            "current_turn": 0,
+            "player_positions": {},
+            "players": []
+        }
         return game_engine_pb2.GameState(**self.state)
 
 def serve():

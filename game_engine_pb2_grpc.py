@@ -49,6 +49,11 @@ class GameEngineStub(object):
                 request_serializer=game__engine__pb2.GameStateRequest.SerializeToString,
                 response_deserializer=game__engine__pb2.GameState.FromString,
                 _registered_method=True)
+        self.ResetGame = channel.unary_unary(
+                '/game.GameEngine/ResetGame',
+                request_serializer=game__engine__pb2.ResetGameRequest.SerializeToString,
+                response_deserializer=game__engine__pb2.GameState.FromString,
+                _registered_method=True)
 
 
 class GameEngineServicer(object):
@@ -72,6 +77,12 @@ class GameEngineServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ResetGame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GameEngineServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -88,6 +99,11 @@ def add_GameEngineServicer_to_server(servicer, server):
             'GetGameState': grpc.unary_unary_rpc_method_handler(
                     servicer.GetGameState,
                     request_deserializer=game__engine__pb2.GameStateRequest.FromString,
+                    response_serializer=game__engine__pb2.GameState.SerializeToString,
+            ),
+            'ResetGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResetGame,
+                    request_deserializer=game__engine__pb2.ResetGameRequest.FromString,
                     response_serializer=game__engine__pb2.GameState.SerializeToString,
             ),
     }
@@ -171,6 +187,33 @@ class GameEngine(object):
             target,
             '/game.GameEngine/GetGameState',
             game__engine__pb2.GameStateRequest.SerializeToString,
+            game__engine__pb2.GameState.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResetGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/game.GameEngine/ResetGame',
+            game__engine__pb2.ResetGameRequest.SerializeToString,
             game__engine__pb2.GameState.FromString,
             options,
             channel_credentials,
