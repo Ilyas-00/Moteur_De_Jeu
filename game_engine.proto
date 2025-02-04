@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package game;
+
+service GameEngine {
+    rpc StartGame (StartGameRequest) returns (GameState);
+    rpc PlayerAction (PlayerActionRequest) returns (GameState);
+    rpc GetGameState (GameStateRequest) returns (GameState);
+}
+
+message StartGameRequest {
+    int32 max_players = 1;
+    int32 max_turns = 2;
+}
+
+message PlayerActionRequest {
+    string player_id = 1;
+    string action = 2;
+}
+
+message GameStateRequest {}
+
+message GameState {
+    string status = 1;
+    int32 current_turn = 2;
+    map<string, string> player_positions = 3;
+}
