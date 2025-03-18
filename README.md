@@ -1,14 +1,5 @@
 # Moteur De Jeu - Jeu de Loups-Garous et Villageois
 
-Un moteur de jeu basé sur gRPC pour un jeu simple de Loups-Garous et Villageois. Ce projet implémente une architecture client-serveur où les joueurs peuvent se déplacer sur une grille et interagir entre eux.
-
-## Architecture
-
-Le système est composé de plusieurs composants :
-- Un moteur de jeu (serveur gRPC)
-- Des clients TCP
-- Un serveur HTTP (optionnel, pour interface web)
-
 ## Fonctionnalités
 
 - Carte 8x8
