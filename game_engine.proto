@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package game;
+
+service GameEngine {
+    rpc StartGame (StartGameRequest) returns (GameState);
+    rpc RegisterPlayer (RegisterPlayerRequest) returns (GameState);
+    rpc AssignRoles (AssignRolesRequest) returns (GameState);
+    rpc PlayerAction (PlayerActionRequest) returns (GameState);
+    rpc GetGameState (GameStateRequest) returns (GameState);
+    rpc ResetGame (ResetGameRequest) returns (GameState);
+}
+
+message StartGameRequest {
+    int32 max_players = 1;
+    int32 max_turns = 2;
+}
+
+message RegisterPlayerRequest {
+    string player_id = 1;
+}
+
+message AssignRolesRequest {}
+
+message PlayerActionRequest {
+    string player_id = 1;
+    string action = 2;
+}
+
+message GameStateRequest {}
+message ResetGameRequest {}
+
+message GameState {
+    string status = 1;
+    int32 current_turn = 2;
+    int32 max_turns = 3;
+    map<string, string> player_positions = 4;
+    repeated string players = 5;
+    map<string, string> roles = 6;  
+}
