@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package game;
+
+// Type de joueur
+enum PlayerType {
+    VILLAGER = 0;
+    WEREWOLF = 1;
+}
+
+// Position sur la carte
+message Position {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+// Représentation d'un joueur
+message Player {
+    int32 id = 1;
+    string name = 2;
+    PlayerType type = 3;
+    Position position = 4;
+    bool is_alive = 5;
+}
+
+// État du jeu
+message GameState {
+    int32 id = 1;
+    string state = 2; // "waiting", "running", "ended"
+    repeated Player players = 3;
+    int32 current_turn = 4;
+    int32 map_size = 5;
+    int32 current_player_id = 6;
+}
+
+// Demande d'état du jeu
+message GameRequest {
+    int32 id = 1;
+}
+
+// Demande de création d'un joueur
+message CreatePlayerRequest {
+    string name = 1;
+    PlayerType type = 2;
+}
+
+// Demande de déplacement
+message MoveRequest {
+    int32 player_id = 1;
+    int32 distance = 2; // 1 ou 2 cases
+    string direction = 3; // "up", "down", "left", "right"
+}
+
+message JoinGameRequest {
+    int32 game_id = 1;
+    int32 player_id = 2;
+}
+
+message GameSettings {
+    int32 map_size = 1;
+    int32 max_players = 2;
+    int32 max_turns = 3;
+}
+
+message CreateGameRequest {
+    GameSettings settings = 1;
+}
+
+message CreateGameResponse {
+    int32 game_id = 1;
+}
+
+message Empty {}
+
+// Service de jeu
+service GameService {
+    // Obtenir l'état du jeu
+    rpc GetGameState(GameRequest) returns (GameState);
+    
+    // Réinitialiser le jeu
+    rpc ResetGame(GameRequest) returns (Empty);
+    
+    // Créer un nouveau jeu
+    rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
+    
+    // Créer un joueur
+    rpc CreatePlayer(CreatePlayerRequest) returns (Player);
+    
+    // Rejoindre un jeu
+    rpc JoinGame(JoinGameRequest) returns (GameState);
+    
+    // Déplacer un joueur
+    rpc MovePlayer(MoveRequest) returns (GameState);
+    
+    // Démarrer le jeu
+    rpc StartGame(GameRequest) returns (GameState);
+    
+    // Terminer le tour
+    rpc EndTurn(GameRequest) returns (GameState);
+}
